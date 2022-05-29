@@ -1,20 +1,26 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+/*
+ * main.c
+ *
+ * ARMv7 Shared Libraries loader. Baba Is You edition.
+ *
+ * Copyright (C) 2021 Andy Nguyen
+ * Copyright (C) 2022 Rinnegatamante
+ * Copyright (C) 2022 Volodymyr Atamanenko
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license. See the LICENSE file for details.
+ */
 
-#include <psp2/touch.h>
+#ifndef SOLOADER_MAIN_H
+#define SOLOADER_MAIN_H
+
 #include "config.h"
+#include "utils/utils.h"
+
 #include "so_util.h"
 
-extern so_module twom_mod;
+extern so_module so_mod;
 
-int debugPrintf(char *text, ...);
+void *baba_main();
 
-int ret0();
-
-int sceKernelChangeThreadCpuAffinityMask(SceUID thid, int cpuAffinityMask);
-
-SceUID _vshKernelSearchModuleByName(const char *, int *);
-
-extern SceTouchPanelInfo panelInfoFront, panelInfoBack;
-
-#endif
+#endif // SOLOADER_MAIN_H

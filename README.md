@@ -1,30 +1,33 @@
-# World of Goo Vita
+<h1 align="center">
+<img align="center" src="https://cdn.cloudflare.steamstatic.com/steam/apps/736260/header.jpg" width="50%"><br>
+Baba Is You · PSVita Port
+</h1>
+<p align="center">
+  <a href="#setup-instructions-for-end-users">How to install</a> •
+  <a href="#controls">Controls</a> •
+  <a href="#build-instructions-for-developers">How to compile</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#license">License</a>
+</p>
 
-<p align="center"><img src="./screenshots/game.png"></p>
+Baba Is You is an award-winning puzzle game where you can change the rules
+by which you play. In every level, the rules themselves are present as
+blocks you can interact with; by manipulating them, you can change how
+the level works and cause surprising, unexpected interactions! 
 
-This is a wrapper/port of <b>World of Goo</b> for the *PS Vita*.
+This repository contains a runner for **Android release of Baba Is You**, based
+on the [Android SO Loader by TheFloW](https://github.com/TheOfficialFloW/gtasa_vita).
 
-The port works by loading the official Android ARMv7 executables in memory, resolving its imports with native functions and patching it in order to properly run.
-
-## Changelog
-
-### v1.1
-
-- Enabled VBOs usage (Less CPU load during rendering).
-- Fixed an issue causing freezes on level ends in certain circumstances.
-- Added support for other languages (Italian, Spanish, Dutch, German, Korean, Chinese, French, Polish)
-- Implemented Menu key with Start button. Now pressing it will pause the game/return to main menu from game HUB.
-- Disabled all debug loggings (Less CPU load and no waste of storage).
-
-### v1.0
-
-- Initial release.
+<b><u>You must legally obtain your own copy of the game</u></b> from
+[Google Play](https://play.google.com/store/apps/details?id=org.hempuli.baba&hl=en_US&gl=US)
+to be able to run this on your Vita. If you did, please follow the instructions
+below to install.
 
 ## Setup Instructions (For End Users)
 
 In order to properly install the game, you'll have to follow these steps precisely:
 
-- Install [kubridge](https://github.com/TheOfficialFloW/kubridge/releases/) and [FdFix](https://github.com/TheOfficialFloW/FdFix/releases/) by copying `kubridge.skprx` and `fd_fix.skprx` to your taiHEN plugins folder (usually `ux0:tai`) and adding two entries to your `config.txt` under `*KERNEL`:
+- Install [kubridge](https://github.com/TheOfficialFloW/kubridge/releases/) and [FdFix](https://github.com/TheOfficialFloW/FdFix/releases/) by copying `kubridge.skprx` and `fd_fix.skprx` to your taiHEN plugins folder (usually `ur0:tai`) and adding two entries to your `config.txt` under `*KERNEL`:
   
 ```
   *KERNEL
@@ -32,56 +35,75 @@ In order to properly install the game, you'll have to follow these steps precise
   ux0:tai/fd_fix.skprx
 ```
 
-**Note** Don't install fd_fix.skprx if you're using rePatch plugin
+**Note** Don't install fd_fix.skprx if you're using rePatch plugin!
 
-- **Optional**: Install [PSVshell](https://github.com/Electry/PSVshell/releases) to overclock your device to 500Mhz.
-- Install `libshacccg.suprx`, if you don't have it already, by following [this guide](https://samilops2.gitbook.io/vita-troubleshooting-guide/shader-compiler/extract-libshacccg.suprx).
-- Obtain your copy of *World of Goo* legally for Android in form of an `.apk` file. [You can get all the required files directly from your phone](https://stackoverflow.com/questions/11012976/how-do-i-get-the-apk-of-an-installed-app-without-root-access) or by using an apk extractor you can find in the play store.
-- Open the apk with your zip explorer and extract the file `libworldofgoo.so` from the `lib/armeabi-v7a` folder to `ux0:data/goo`. 
-- Extract the folders `res` and `properties` from the `assets` folder inside `ux0:data/goo`.
+- <u>Legally</u> obtain your copy of [Baba Is You](https://play.google.com/store/apps/details?id=org.hempuli.baba&hl=en_US&gl=US)
+for Android in form of an `.apk` file. [You can get all the required files directly from your phone](https://stackoverflow.com/questions/11012976/how-do-i-get-the-apk-of-an-installed-app-without-root-access)
+or by using any APK extractor you can find on Google Play.
+- Open the `.apk` with any zip explorer (like [7-Zip](https://www.7-zip.org/)) and extract all folders from the `.apk` into `ux0:data/baba`. Example of resulting path: `ux0:data/baba/assets/Arrow.png`
+- Install `BABA.vpk` (from [Releases](https://github.com/v-atamanenko/vita_is_you/releases/latest)).
+
+Controls
+-----------------
+
+|             Button             | Action        |
+|:------------------------------:|:--------------|
+| ![joysl] / ![dpadh] / ![dpadv] | Move Baba     |
+|            ![cross]            | Select / OK   |
+|      ![circl] / ![squar]       | Undo          |
+|            ![trian]            | Wait          |
+|            ![selec]            | Restart level |
+|            ![start]            | Open Menu     |
 
 ## Build Instructions (For Developers)
 
 In order to build the loader, you'll need a [vitasdk](https://github.com/vitasdk) build fully compiled with softfp usage.  
-You can find a precompiled version here: https://github.com/vitasdk/buildscripts/actions/runs/1102643776.  
-Additionally, you'll need these libraries to be compiled as well with `-mfloat-abi=softfp` added to their CFLAGS:
+You can find a precompiled version [here](https://github.com/vitasdk/buildscripts/releases).  
+Additionally, you'll need these libraries to be compiled as well with `-mfloat-abi=softfp` added to their CFLAGS.
+You can find precompiled versions [here](https://github.com/Rinnegatamante/vitasdk-packages-softfp/releases).
 
-- [SoLoud](https://github.com/vitasdk/packages/blob/master/soloud/VITABUILD)
+- OpenSLES
+- mathneon
+- vita2d
+- VitaGL
 
-- [libmathneon](https://github.com/Rinnegatamante/math-neon)
-
-  - ```bash
-    make install
-    ```
-
-- [vitaShaRK](https://github.com/Rinnegatamante/vitaShaRK)
-
-  - ```bash
-    make install
-    ```
-
-- [kubridge](https://github.com/TheOfficialFloW/kubridge)
-
-  - ```bash
-    mkdir build && cd build
-    cmake .. && make install
-    ```
-
-- [vitaGL](https://github.com/Rinnegatamante/vitaGL)
-
-  - ````bash
-    make SOFTFP_ABI=1 NO_DEBUG=1 install
-    ````
+Additionally, you'll need to manually compile [Northfear's fork of SDL2](https://github.com/Northfear/SDL) with VitaGL backend.
 
 After all these requirements are met, you can compile the loader with the following commands:
 
 ```bash
-mkdir build && cd build
-cmake .. && make
+cmake -Bbuild .
+cmake --build build
 ```
 
-## Credits
+Also note that this CMakeLists has two "convenience targets". While developing, I highly recommed using them, like this:
+```bash
+cmake --build build --target send # Build, upload eboot.bin and run (requires vitacompanion)
+cmake --build build --target dump # Fetch latest coredump and parse
+```
 
-- TheFloW for the original .so loader and general advices during the porting.
-- f2pwn for testing the homebrew.
-- Once13One for the Livearea assets.
+For more information and build options, read the [CMakeLists.txt](CMakeLists.txt).
+
+## Credits
+- [Andy "The FloW" Nguyen](https://github.com/TheOfficialFloW/) for the original .so loader.
+- [Rinnegatamante](https://github.com/Rinnegatamante/) for VitaGL and lots of help with understanding and debugging the loader.
+- [psykana](https://github.com/psykana/) for technical advice, help with testing, patching the side buttons, moral support, and memes.
+- [Northfear](https://github.com/Northfear/) for the VitaGL SDL fork and shared experience of porting SDL-powered Android games.
+- [GrapheneCt](https://github.com/GrapheneCt/) for PVR_PSP2, sfp2hfp, and pthread wrapper functions.
+- Everybody on the Vita scene who answered my occasional stupid questions on Discord.
+
+## License
+This software may be modified and distributed under the terms of
+the MIT license. See the [LICENSE](LICENSE) file for details.
+
+[cross]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/cross.svg "Cross"
+[circl]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/circle.svg "Circle"
+[squar]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/square.svg "Square"
+[trian]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/triangle.svg "Triangle"
+[joysl]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/joystick-left.svg "Left Joystick"
+[dpadh]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/dpad-left-right.svg "D-Pad Left/Right"
+[dpadv]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/dpad-top-down.svg "D-Pad Up/Down"
+[selec]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/dpad-select.svg "Select"
+[start]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/dpad-start.svg "Start"
+[trigl]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/trigger-left.svg "Left Trigger"
+[trigr]: https://raw.githubusercontent.com/v-atamanenko/sdl2sand/master/img/trigger-right.svg "Right Trigger"
