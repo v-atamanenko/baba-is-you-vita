@@ -167,8 +167,7 @@ void patch_game(void) {
     // game-specific
     {
         // Nuke side menu
-        uint32_t nop32 = 0xBF00BF00;
-        kuKernelCpuUnrestrictedMemcpy((void *)(so_mod.text_base + 0x001b4d1e), &nop32, sizeof(nop32));
+        hook_addr(so_symbol(&so_mod, "_Z13baba_get_viewPiS_S_S_ii"), (uintptr_t)&do_nothing);
 
 #if GRAPHICS_API==GRAPHICS_API_PVR
         hook_addr(so_symbol(&goo_mod, "_Z8bind_texj"), (uintptr_t)&bind_tex);
