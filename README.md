@@ -31,8 +31,8 @@ In order to properly install the game, you'll have to follow these steps precise
   
 ```
   *KERNEL
-  ux0:tai/kubridge.skprx
-  ux0:tai/fd_fix.skprx
+  ur0:tai/kubridge.skprx
+  ur0:tai/fd_fix.skprx
 ```
 
 **Note** Don't install fd_fix.skprx if you're using rePatch plugin!
