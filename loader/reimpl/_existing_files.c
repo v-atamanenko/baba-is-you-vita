@@ -9,6 +9,8 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
+// This array must be sorted alphabetically
+
 char * existing_files [] = {
         "ux0:data/baba/assets/0ba.ba",
         "ux0:data/baba/assets/1ba.ba",
