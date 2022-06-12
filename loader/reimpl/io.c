@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <sys/unistd.h>
 #include <malloc.h>
+#include <stdlib.h>
 
 #include "utils/utils.h"
 #include "utils/dialog.h"
@@ -116,22 +117,25 @@ void preload() {
 #include "_existing_files.c"
 int existing_files_len = sizeof(existing_files)/sizeof(existing_files[0]);
 
+int compare_strings(const void *a, const void *b) {
+    return strcmp(*(const char **)a, *(const char **)b);
+}
+
 FILE *fopen_soloader(char *fname, char *mode) {
-    for (int i = 0; i < preload_files_len; ++i) {
-        if(strcmp(preload_files[i], fname) == 0) {
-            debugPrintf("fmemopen(%s)\n", fname);
-            return fmemopen(inmemfiles[i]->buf, inmemfiles[i]->size, mode);
-        }
+    char **preload_file = bsearch(&fname, preload_files, preload_files_len, sizeof(preload_files[0]), compare_strings);
+    if (preload_file) {
+        int preload_file_index = preload_file - preload_files;
+        debugPrintf("fmemopen(%s)\n", fname);
+        return fmemopen(inmemfiles[preload_file_index]->buf, inmemfiles[preload_file_index]->size, mode);
     }
 
     // This weird optimization had to be done because Baba Is You on every
     // level/world calls fopen() for an unimaginable amount of non-existing
     // files. The following code reduced level load from ~18 min to ~25 s.
-    for (int i = 0; i < existing_files_len; ++i) {
-        if(strcmp(existing_files[i], fname) == 0) {
-            debugPrintf("fopen(%s)\n", fname);
-            return fopen(fname, mode);
-        }
+    char **existing_file = bsearch(&fname, existing_files, existing_files_len, sizeof(existing_files[0]), compare_strings);
+    if (existing_file) {
+        debugPrintf("fopen(%s)\n", fname);
+        return fopen(fname, mode);
     }
 
     debugPrintf("skipping fopen(%s)\n", fname);

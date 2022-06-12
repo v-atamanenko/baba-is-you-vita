@@ -9,6 +9,8 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
+// This array must be sorted alphabetically
+
 char * preload_files [] = {
         "ux0:data/baba/assets/Data/Sprites/algae_0_1.png",
         "ux0:data/baba/assets/Data/Sprites/algae_0_2.png",
