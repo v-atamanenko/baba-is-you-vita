@@ -29,7 +29,7 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 set(VITA_APP_NAME "Baba Is You")
 set(VITA_TITLEID  "BABAISYOU")
 set(VITA_VPKNAME  "BABAISYOU")
-set(VITA_VERSION  "01.10")
+set(VITA_VERSION  "01.20")
 set(VITA_MKSFOEX_FLAGS "-d ATTRIBUTE2=12")
 
 option(DEBUG "Print debug information to stdout" OFF)
