@@ -20,10 +20,13 @@
 #include <sys/unistd.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <psp2/io/dirent.h>
 
 #include "utils/utils.h"
 #include "utils/dialog.h"
 #include "utils/loading_screen.h"
+#include "main.h"
+#include "so_util.h"
 
 #include "_preload_files.c"
 const int preload_files_len = sizeof(preload_files)/sizeof(preload_files[0]);
@@ -245,4 +248,45 @@ int ffullread(FILE *f, void **dataptr, size_t *sizeptr, size_t chunk) {
     *sizeptr = used;
 
     return FFULLREAD_OK;
+}
+
+void platform_walk_folder(CppString *pathname, FolderCallback *callback) {
+    void (*convert_path)(CppString *, CppString *) = (void *) so_symbol(&so_mod, "_Z12convert_pathRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
+    void (*cpp_string_from_c)(CppString *, const char *) = (void *) so_symbol(&so_mod, "_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc");
+    void (*cpp_string_free)(CppString *) = (void *) so_symbol(&so_mod, "_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev");
+
+    CppString converted_path;
+    convert_path(&converted_path, pathname);
+
+    char *converted_path_c;
+    if ((converted_path.raw[0] & 1) != 0) {
+        converted_path_c = converted_path.external.data;
+    } else {
+        converted_path_c = (char *)&converted_path.raw[1];
+    }
+
+    char absolute_converted_path_c[1024];
+    snprintf(absolute_converted_path_c, 1024, "%s/%s", DATA_PATH_INT, converted_path_c);
+
+    debugPrintf("platform_walk_folder for %s\n", absolute_converted_path_c);
+
+    SceUID dp = sceIoDopen(absolute_converted_path_c);
+    if (dp >= 0) {
+        struct SceIoDirent ep;
+        while (sceIoDread(dp, &ep) > 0) {
+            debugPrintf("platform_walk_folder found %s\n", ep.d_name);
+
+            FilesystemItem fs_item;
+            cpp_string_from_c(&fs_item.name, ep.d_name);
+            fs_item.is_file = (ep.d_stat.st_mode & SCE_S_IFDIR) == 0;
+
+            callback->vtable->onItem(callback, &fs_item);
+
+            cpp_string_free(&fs_item.name);
+        }
+
+        sceIoDclose(dp);
+    }
+
+    cpp_string_free(&converted_path);
 }

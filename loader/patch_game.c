@@ -30,6 +30,7 @@
 #include "utils/utils.h"
 #include "jni.h"
 
+#include "reimpl/io.h"
 #include "reimpl/log.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -179,6 +180,7 @@ void patch_game(void) {
         hook_addr(so_symbol(&so_mod, "fopen_nx"), (uintptr_t)&fopen_nx);
         hook_addr(so_symbol(&so_mod, "mbedtls_debug_print_msg"), (uintptr_t)&mbedtls_debug_print_msg);
         hook_addr(so_symbol(&so_mod, "platform_get_language"), (uintptr_t)&platform_get_language);
+        hook_addr(so_symbol(&so_mod, "_Z20platform_walk_folderRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEER14FolderCallback"), (uintptr_t)&platform_walk_folder);
     }
 
     // stb_image

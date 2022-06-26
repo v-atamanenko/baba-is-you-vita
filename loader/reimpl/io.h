@@ -38,6 +38,34 @@ int fseeko_soloader(FILE * a, off_t b, int c);
 
 off_t ftello_soloader(FILE * a);
 
+// Chowdren's platform_walk_folder is a stub on Android, provide a real implementation
+
+typedef union CppString {
+    uint8_t raw[12];
+    struct {
+        uint32_t capacity;
+        uint32_t size;
+        char *data;
+    } external;
+} CppString;
+
+typedef struct FilesystemItem {
+    CppString name;
+    uint8_t is_file;
+} FilesystemItem;
+
+struct FolderCallback;
+
+typedef struct FolderCallback_VTable {
+    void (*onItem)(struct FolderCallback *_this, FilesystemItem *item);
+} FolderCallback_VTable;
+
+typedef struct FolderCallback {
+    FolderCallback_VTable *vtable;
+} FolderCallback;
+
+void platform_walk_folder(CppString *pathname, FolderCallback *callback);
+
 /*
  * Stuff related to in-memory assets preloading.
  */
