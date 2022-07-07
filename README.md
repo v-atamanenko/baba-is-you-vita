@@ -17,10 +17,13 @@ the level works and cause surprising, unexpected interactions!
 
 This repository contains a loader of **the Android release of Baba Is You**, based
 on the [Android SO Loader by TheFloW](https://github.com/TheOfficialFloW/gtasa_vita).
+The loader provides a tailored, minimalistic Android-like environment to run
+the official ARMv7 game executables on the PS Vita.
 
-The loader provides a tailored, minimalistic Android-like environment to run the official ARMv7 game executables on the PS Vita.
-
-**This software does not contain the original code, executables, assets, or other not redistributable parts of the game. The authors do not promote or condone piracy in any way. To launch and play the game on their PS Vita device, users must provide their own legally obtained copy of the game in form of an .apk file.**
+**This software does not contain the original code, executables, assets, or other
+not redistributable parts of the game. The authors do not promote or condone piracy
+in any way. To launch and play the game on their PS Vita device, users must provide
+their own legally obtained copy of the game in form of an .apk file.**
 
 ## Setup Instructions (For End Users)
 
