@@ -13,15 +13,14 @@ Baba Is You · PSVita Port
 Baba Is You is an award-winning puzzle game where you can change the rules
 by which you play. In every level, the rules themselves are present as
 blocks you can interact with; by manipulating them, you can change how
-the level works and cause surprising, unexpected interactions! 
+the level works and cause surprising, unexpected interactions!
 
-This repository contains a runner for **Android release of Baba Is You**, based
+This repository contains a loader for **the Android release of Baba Is You**, based
 on the [Android SO Loader by TheFloW](https://github.com/TheOfficialFloW/gtasa_vita).
 
-<b><u>You must legally obtain your own copy of the game</u></b> from
-[Google Play](https://play.google.com/store/apps/details?id=org.hempuli.baba&hl=en_US&gl=US)
-to be able to run this on your Vita. If you did, please follow the instructions
-below to install.
+The loader provides a tailored, minimalistic Android-like environment to run the official ARMv7 game executables on the PS Vita.
+
+**This software does not contain the original code, executables, assets, or other not redistributable parts of the game. The authors do not promote or condone piracy in any way. To launch and play the game on their PS Vita device, users must provide their own legally obtained copy of the game in form of an .apk file.**
 
 ## Setup Instructions (For End Users)
 
