@@ -15,7 +15,7 @@ by which you play. In every level, the rules themselves are present as
 blocks you can interact with; by manipulating them, you can change how
 the level works and cause surprising, unexpected interactions!
 
-This repository contains a loader for **the Android release of Baba Is You**, based
+This repository contains a loader of **the Android release of Baba Is You**, based
 on the [Android SO Loader by TheFloW](https://github.com/TheOfficialFloW/gtasa_vita).
 
 The loader provides a tailored, minimalistic Android-like environment to run the official ARMv7 game executables on the PS Vita.
