@@ -69,6 +69,8 @@ extern void *_ZTVN10__cxxabiv120__si_class_type_infoE;
 extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE;
 extern void *_Znwj;
 extern void *__aeabi_atexit;
+extern void *__aeabi_memset;
+extern void *__aeabi_memset8;
 extern void *__cxa_atexit;
 extern void *__cxa_finalize;
 extern void *__cxa_pure_virtual;
@@ -143,8 +145,8 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "__aeabi_memmove", (uintptr_t)&sceClibMemmove},
     { "__aeabi_memmove4", (uintptr_t)&sceClibMemmove},
     { "__aeabi_memmove8", (uintptr_t)&sceClibMemmove},
-    { "__aeabi_memset", (uintptr_t)&sceClibMemset},
-    { "__aeabi_memset8", (uintptr_t)&sceClibMemset},
+    { "__aeabi_memset", (uintptr_t)&__aeabi_memset },
+    { "__aeabi_memset8", (uintptr_t)&__aeabi_memset8 },
     { "__android_log_print", (uintptr_t)&android_log_print },
     { "__android_log_vprint", (uintptr_t)&android_log_vprint },
     { "__android_log_write", (uintptr_t)&android_log_write },
