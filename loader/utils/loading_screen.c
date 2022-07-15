@@ -78,7 +78,6 @@ void loading_screen_run_assets_preloader() {
     vita2d_init();
     font = vita2d_load_default_pgf();
     size_t n = sizeof(intro_preloader)/sizeof(intro_preloader[0]);
-    fprintf(stderr, "Size: %i\n", n);
 
     for (int z = 0; z < n; z++) {
         int w = vita2d_pgf_text_width(font, 1.0f, intro_preloader[z].text);

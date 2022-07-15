@@ -109,6 +109,8 @@ else()
           vitaGL
           vitashark
           SceShaccCg_stub
+          SceShaccCgExt
+          taihen_stub
   )
   set(SDL_LIBS
           SDL2d # Name to be changed to normal when Northfear's fork is merged
