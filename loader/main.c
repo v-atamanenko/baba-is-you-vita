@@ -61,6 +61,9 @@ int main() {
     preload();
     debugPrintf("preload() passed.\n");
 
+    scan_existing_files();
+    debugPrintf("scan_existing_files() passed.\n");
+
     if (check_kubridge() < 0)
         fatal_error("Error kubridge.skprx is not installed.");
     debugPrintf("check_kubridge() passed.\n");

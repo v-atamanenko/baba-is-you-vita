@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <sys/unistd.h>
 #include <malloc.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <psp2/io/dirent.h>
 
@@ -116,12 +117,53 @@ void preload() {
     }
 }
 
+static int existing_files_capacity = 0;
+static int existing_files_len = 0;
+static char **existing_files = NULL;
 
-#include "_existing_files.c"
-int existing_files_len = sizeof(existing_files)/sizeof(existing_files[0]);
-
-int compare_strings(const void *a, const void *b) {
+static int compare_strings(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
+}
+
+static void add_existing_file(const char *path) {
+    if (!existing_files) {
+        existing_files_capacity = 1000;
+        existing_files = malloc(sizeof(char *) * existing_files_capacity);
+    }
+
+    if (existing_files_len >= existing_files_capacity) {
+        existing_files_capacity += existing_files_capacity / 10;
+        existing_files = realloc(existing_files, sizeof(char *) * existing_files_capacity);
+    }
+
+    existing_files[existing_files_len] = strdup(path);
+    existing_files_len++;
+}
+
+static void scan_directory_for_existing_files(const char *path) {
+    SceUID dp = sceIoDopen(path);
+    if (dp >= 0) {
+        struct SceIoDirent ep;
+        while (sceIoDread(dp, &ep) > 0) {
+            char absolute_path[1024];
+            snprintf(absolute_path, 1024, "%s/%s", path, ep.d_name);
+
+            bool is_directory = (ep.d_stat.st_mode & SCE_S_IFDIR) != 0;
+
+            if (is_directory) {
+                scan_directory_for_existing_files(absolute_path);
+            } else {
+                add_existing_file(absolute_path);
+            }
+        }
+
+        sceIoDclose(dp);
+    }
+}
+
+void scan_existing_files() {
+    scan_directory_for_existing_files(DATA_PATH);
+    qsort(existing_files, existing_files_len, sizeof(char *), &compare_strings);
 }
 
 FILE *fopen_soloader(char *fname, char *mode) {
@@ -139,6 +181,19 @@ FILE *fopen_soloader(char *fname, char *mode) {
     if (existing_file) {
         debugPrintf("fopen(%s)\n", fname);
         return fopen(fname, mode);
+    }
+
+    // When writing to a new file, add it to the existing_files
+    if (strchr(mode, 'w')) {
+         debugPrintf("fopen(%s) - creating new file\n", fname);
+         FILE *fp = fopen(fname, mode);
+
+         if (fp) {
+             add_existing_file(fname);
+             qsort(existing_files, existing_files_len, sizeof(char *), &compare_strings);
+         }
+
+         return fp;
     }
 
     debugPrintf("skipping fopen(%s)\n", fname);

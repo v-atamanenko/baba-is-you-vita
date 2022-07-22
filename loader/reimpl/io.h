@@ -77,6 +77,8 @@ typedef struct inmemfile {
 
 void preload();
 
+void scan_existing_files();
+
 #define FFULLREAD_OK      (0)
 #define FFULLREAD_INVALID (-1) // Invalid params
 #define FFULLREAD_ERROR   (-2) // File stream error
