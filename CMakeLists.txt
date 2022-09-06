@@ -153,6 +153,8 @@ target_link_libraries(so_loader
         ScePower_stub
         SceTouch_stub
         SceVshBridge_stub
+        SceNet_stub
+        SceNetCtl_stub
 )
 
 vita_create_self(eboot.bin so_loader UNSAFE)
