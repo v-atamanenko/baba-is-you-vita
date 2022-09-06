@@ -310,6 +310,18 @@ int ffullread(FILE *f, void **dataptr, size_t *sizeptr, size_t chunk) {
     return FFULLREAD_OK;
 }
 
+int remove_soloader(const char *path) {
+    char absolute_path[512];
+    if (strncmp(path, DATA_PATH_INT, strlen(DATA_PATH_INT)) != 0) {
+        snprintf(absolute_path, 512, "%s/%s", DATA_PATH_INT, path);
+	} else {
+        strncpy(absolute_path, path, 512);
+	}
+
+    debugPrintf("remove(%s)\n", absolute_path);
+    return remove(absolute_path);
+}
+
 void platform_walk_folder(CppString *pathname, FolderCallback *callback) {
     void (*convert_path)(CppString *, CppString *) = (void *) so_symbol(&so_mod, "_Z12convert_pathRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
     void (*cpp_string_from_c)(CppString *, const char *) = (void *) so_symbol(&so_mod, "_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc");

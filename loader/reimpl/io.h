@@ -39,6 +39,8 @@ int fseeko_soloader(FILE * a, off_t b, int c);
 
 off_t ftello_soloader(FILE * a);
 
+int remove_soloader(const char *path);
+
 // Chowdren's platform_walk_folder is a stub on Android, provide a real implementation
 
 typedef union CppString {

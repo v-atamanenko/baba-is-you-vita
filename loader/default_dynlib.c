@@ -516,7 +516,7 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "raise", (uintptr_t)&raise},
     { "read", (uintptr_t)&read },
     { "realloc", (uintptr_t)&realloc },
-    { "remove", (uintptr_t)&remove},
+    { "remove", (uintptr_t)&remove_soloader},
     { "rint", (uintptr_t)&rint },
     { "rmdir", (uintptr_t)&rmdir},
     { "round", (uintptr_t)&round},
