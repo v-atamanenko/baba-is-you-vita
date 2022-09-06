@@ -39,7 +39,6 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-#include "stb_vorbis.c"
 #include "utils/loading_screen.h"
 #include "libc_bridge.h"
 
@@ -224,34 +223,6 @@ void patch_game(void) {
         hook_addr(so_symbol(&so_mod, "_Z21stbiw__write_run_dataP19stbi__write_contextih"), (uintptr_t)&stbiw__write_run_data);
         hook_addr(so_symbol(&so_mod, "_Z22stbiw__write_dump_dataP19stbi__write_contextiPh"), (uintptr_t)&stbiw__write_dump_data);
         hook_addr(so_symbol(&so_mod, "_Z25stbiw__write_hdr_scanlineP19stbi__write_contextiiPhPf"), (uintptr_t)&stbiw__write_hdr_scanline);
-    }
-
-    // stb_vorbis
-    {
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_close"), (uintptr_t)&stb_vorbis_close);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_decode_filename"), (uintptr_t)&stb_vorbis_decode_filename);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_decode_memory"), (uintptr_t)&stb_vorbis_decode_memory);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_comment"), (uintptr_t)&stb_vorbis_get_comment);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_error"), (uintptr_t)&stb_vorbis_get_error);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_file_offset"), (uintptr_t)&stb_vorbis_get_file_offset);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_frame_float"), (uintptr_t)&stb_vorbis_get_frame_float);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_frame_short"), (uintptr_t)&stb_vorbis_get_frame_short);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_frame_short_interleaved"), (uintptr_t)&stb_vorbis_get_frame_short_interleaved);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_info"), (uintptr_t)&stb_vorbis_get_info);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_sample_offset"), (uintptr_t)&stb_vorbis_get_sample_offset);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_samples_float"), (uintptr_t)&stb_vorbis_get_samples_float);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_samples_float_interleaved"), (uintptr_t)&stb_vorbis_get_samples_float_interleaved);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_samples_short"), (uintptr_t)&stb_vorbis_get_samples_short);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_get_samples_short_interleaved"), (uintptr_t)&stb_vorbis_get_samples_short_interleaved);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_open_file"), (uintptr_t)&stb_vorbis_open_file);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_open_file_section"), (uintptr_t)&stb_vorbis_open_file_section);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_open_filename"), (uintptr_t)&stb_vorbis_open_filename);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_open_memory"), (uintptr_t)&stb_vorbis_open_memory);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_seek"), (uintptr_t)&stb_vorbis_seek);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_seek_frame"), (uintptr_t)&stb_vorbis_seek_frame);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_seek_start"), (uintptr_t)&stb_vorbis_seek_start);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_stream_length_in_samples"), (uintptr_t)&stb_vorbis_stream_length_in_samples);
-        hook_addr(so_symbol(&so_mod, "stb_vorbis_stream_length_in_seconds"), (uintptr_t)&stb_vorbis_stream_length_in_seconds);
     }
 
     // SDL2

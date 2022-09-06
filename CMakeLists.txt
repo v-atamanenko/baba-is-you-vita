@@ -129,9 +129,6 @@ target_link_libraries(so_loader
         stdc++
         OpenSLES
         sndfile
-        vorbis
-        vorbisenc
-        vorbisfile
         ogg
         FLAC
         ${GRAPHICS_LIBS}
