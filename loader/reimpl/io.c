@@ -239,6 +239,11 @@ void *AAssetManager_open(void *mgr, const char *filename, int mode) {
     return 0;
 }
 
+void *AAssetManager_openDir(void *mgr, const char *dirName) {
+    debugPrintf("AAssetManager_openDir(%p, %s)\n", mgr, dirName);
+    return 0;
+}
+
 int fseeko_soloader(FILE * a, off_t b, int c) {
     debugPrintf("fseeko(%i)\n", (int32_t)a);
     return fseeko(a,b,c);

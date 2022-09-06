@@ -33,6 +33,7 @@ int close_soloader(int fd);
 int stat_soloader(const char *pathname, void *statbuf);
 
 void *AAssetManager_open(void *mgr, const char *filename, int mode);
+void *AAssetManager_openDir(void *mgr, const char *dirName);
 
 int fseeko_soloader(FILE * a, off_t b, int c);
 
