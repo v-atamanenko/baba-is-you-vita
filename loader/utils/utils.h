@@ -15,6 +15,8 @@
 
 #include "config.h"
 
+#define ARRAY_SIZE(array) (sizeof((array))/sizeof((array)[0]))
+
 void* retNULL(void);
 
 int ret0(void);
