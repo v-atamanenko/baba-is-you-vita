@@ -113,8 +113,8 @@ else()
           taihen_stub
   )
   set(SDL_LIBS
-          SDL2d # Name to be changed to normal when Northfear's fork is merged
-          SDL2maind
+          SDL2
+          SDL2main
   )
   set(VPK_INCLUDES
           ${CMAKE_SOURCE_DIR}/shaders shaders
@@ -129,6 +129,8 @@ target_link_libraries(so_loader
         stdc++
         OpenSLES
         sndfile
+        vorbis
+        vorbisenc
         ogg
         FLAC
         ${GRAPHICS_LIBS}
@@ -155,6 +157,7 @@ target_link_libraries(so_loader
         SceVshBridge_stub
         SceNet_stub
         SceNetCtl_stub
+        SceIme_stub
 )
 
 vita_create_self(eboot.bin so_loader UNSAFE)
