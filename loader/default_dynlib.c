@@ -70,6 +70,7 @@ extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE;
 extern void *_Znwj;
 extern void *__aeabi_atexit;
 extern void *__aeabi_memset;
+extern void *__aeabi_memset4;
 extern void *__aeabi_memset8;
 extern void *__cxa_atexit;
 extern void *__cxa_finalize;
@@ -77,6 +78,7 @@ extern void *__cxa_pure_virtual;
 extern void *__gnu_unwind_frame;
 extern void *__stack_chk_fail;
 extern void *__stack_chk_guard;
+extern void *__cxa_thread_atexit;
 
 static char *__ctype_ = (char *)&_ctype_; // NOLINT(cppcoreguidelines-interfaces-global-init)
 static FILE __sF_fake[0x100][3];
@@ -85,6 +87,7 @@ static FILE __sF_fake[0x100][3];
 so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "AAssetManager_fromJava", (uintptr_t)&retNULL},
     { "AAssetManager_open", (uintptr_t)&AAssetManager_open},
+    { "AAssetManager_openDir", (uintptr_t)&AAssetManager_openDir},
     { "AAsset_close", (uintptr_t)&retNULL},
     { "AAsset_getLength", (uintptr_t)&retNULL},
     { "AAsset_getLength64", (uintptr_t)&retNULL},
@@ -92,6 +95,7 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "AAsset_read", (uintptr_t)&retNULL},
     { "AAsset_seek", (uintptr_t)&retNULL},
     { "AAsset_seek64", (uintptr_t)&retNULL},
+    { "AAssetDir_close", (uintptr_t)&retNULL},
     { "AConfiguration_delete", (uintptr_t)&retNULL},
     { "AConfiguration_fromAssetManager", (uintptr_t)&retNULL},
     { "AConfiguration_getCountry", (uintptr_t)&retNULL},
@@ -146,6 +150,7 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "__aeabi_memmove4", (uintptr_t)&sceClibMemmove},
     { "__aeabi_memmove8", (uintptr_t)&sceClibMemmove},
     { "__aeabi_memset", (uintptr_t)&__aeabi_memset },
+    { "__aeabi_memset4", (uintptr_t)&__aeabi_memset4 },
     { "__aeabi_memset8", (uintptr_t)&__aeabi_memset8 },
     { "__android_log_print", (uintptr_t)&android_log_print },
     { "__android_log_vprint", (uintptr_t)&android_log_vprint },
@@ -159,6 +164,7 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "__cxa_free_exception", (uintptr_t)&__cxa_free_exception},
     { "__cxa_pure_virtual", (uintptr_t)&__cxa_pure_virtual },
     { "__cxa_rethrow", (uintptr_t)&__cxa_rethrow},
+    { "__cxa_thread_atexit_impl", (uintptr_t)&__cxa_thread_atexit},
     { "__cxa_throw", (uintptr_t)&__cxa_throw},
     { "__errno", (uintptr_t)&__errno },
     { "__gnu_unwind_frame", (uintptr_t)&__gnu_unwind_frame },
@@ -510,7 +516,7 @@ so_default_dynlib default_dynlib[SO_DYNLIB_LENGTH] = {
     { "raise", (uintptr_t)&raise},
     { "read", (uintptr_t)&read },
     { "realloc", (uintptr_t)&realloc },
-    { "remove", (uintptr_t)&remove},
+    { "remove", (uintptr_t)&remove_soloader},
     { "rint", (uintptr_t)&rint },
     { "rmdir", (uintptr_t)&rmdir},
     { "round", (uintptr_t)&round},

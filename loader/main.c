@@ -15,9 +15,14 @@
 
 #include <pthread.h>
 #include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 
 #include <psp2/apputil.h>
 #include <psp2/power.h>
+#include <psp2/sysmodule.h>
+#include <psp2/net/net.h>
+#include <psp2/net/netctl.h>
 
 #include "default_dynlib.h"
 #include "fios.h"
@@ -35,11 +40,25 @@ unsigned int sceLibcHeapSize = MEMORY_LIBC_MB * 1024 * 1024;
 int _newlib_heap_size_user = MEMORY_NEWLIB_MB * 1024 * 1024;
 unsigned int _pthread_stack_default_user = STACK_PTHREAD_MB * 1024 * 1024;
 
+#define NET_MEM_SIZE (128*1024 + ((4+3+4) * 1024)) + 1300
+
 so_module so_mod;
 
 // This symbol is required for set_tex() reimplementation needed when using
 // PVR_PSP2 graphics driver.
 void (* gl_flush_cache)(void); // _Z14gl_flush_cachev
+
+void net_init() {
+    sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
+
+    SceNetInitParam netInitParam;
+    netInitParam.memory = malloc(NET_MEM_SIZE);
+    netInitParam.size = NET_MEM_SIZE;
+    netInitParam.flags = 0;
+    sceNetInit(&netInitParam);
+
+    sceNetCtlInit();
+}
 
 int main() {
     SceAppUtilInitParam init_param;
@@ -60,6 +79,11 @@ int main() {
     // Baba-specific hack. Preloading sprites into RAM to reduce loading times.
     preload();
     debugPrintf("preload() passed.\n");
+
+    scan_existing_files();
+    debugPrintf("scan_existing_files() passed.\n");
+
+    mkdir(DATA_PATH_INT "/temp", 0755);
 
     if (check_kubridge() < 0)
         fatal_error("Error kubridge.skprx is not installed.");
@@ -89,6 +113,8 @@ int main() {
 
     init_jni();
     debugPrintf("init_jni() passed.\n");
+
+    net_init();
 
     // This symbol is required for set_tex() reimplementation needed when using
     // PVR_PSP2 graphics driver.

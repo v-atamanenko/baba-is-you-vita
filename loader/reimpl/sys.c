@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/errno.h>
+#include <psp2/kernel/rng.h>
 #include <psp2/kernel/threadmgr.h>
 
 #include "sys.h"
@@ -58,5 +59,19 @@ int nanosleep_soloader (const struct timespec *rqtp,
     const uint32_t us = rqtp->tv_sec * 1000000 + (rqtp->tv_nsec+999) / 1000;
 
     sceKernelDelayThread(us);
+    return 0;
+}
+
+int mbedtls_platform_entropy_poll(void *data, unsigned char *output, size_t len, size_t *olen) {
+    if (len > 64) {
+        len = 64;
+    }
+
+    if (sceKernelGetRandomNumber(output, len) < 0) {
+        return -1;
+    }
+
+    *olen = len;
+
     return 0;
 }

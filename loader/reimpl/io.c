@@ -19,11 +19,15 @@
 #include <sys/stat.h>
 #include <sys/unistd.h>
 #include <malloc.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <psp2/io/dirent.h>
 
 #include "utils/utils.h"
 #include "utils/dialog.h"
 #include "utils/loading_screen.h"
+#include "main.h"
+#include "so_util.h"
 
 #include "_preload_files.c"
 const int preload_files_len = sizeof(preload_files)/sizeof(preload_files[0]);
@@ -113,12 +117,53 @@ void preload() {
     }
 }
 
+static int existing_files_capacity = 0;
+static int existing_files_len = 0;
+static char **existing_files = NULL;
 
-#include "_existing_files.c"
-int existing_files_len = sizeof(existing_files)/sizeof(existing_files[0]);
-
-int compare_strings(const void *a, const void *b) {
+static int compare_strings(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
+}
+
+static void add_existing_file(const char *path) {
+    if (!existing_files) {
+        existing_files_capacity = 1000;
+        existing_files = malloc(sizeof(char *) * existing_files_capacity);
+    }
+
+    if (existing_files_len >= existing_files_capacity) {
+        existing_files_capacity += existing_files_capacity / 10;
+        existing_files = realloc(existing_files, sizeof(char *) * existing_files_capacity);
+    }
+
+    existing_files[existing_files_len] = strdup(path);
+    existing_files_len++;
+}
+
+static void scan_directory_for_existing_files(const char *path) {
+    SceUID dp = sceIoDopen(path);
+    if (dp >= 0) {
+        struct SceIoDirent ep;
+        while (sceIoDread(dp, &ep) > 0) {
+            char absolute_path[1024];
+            snprintf(absolute_path, 1024, "%s/%s", path, ep.d_name);
+
+            bool is_directory = (ep.d_stat.st_mode & SCE_S_IFDIR) != 0;
+
+            if (is_directory) {
+                scan_directory_for_existing_files(absolute_path);
+            } else {
+                add_existing_file(absolute_path);
+            }
+        }
+
+        sceIoDclose(dp);
+    }
+}
+
+void scan_existing_files() {
+    scan_directory_for_existing_files(DATA_PATH);
+    qsort(existing_files, existing_files_len, sizeof(char *), &compare_strings);
 }
 
 FILE *fopen_soloader(char *fname, char *mode) {
@@ -136,6 +181,19 @@ FILE *fopen_soloader(char *fname, char *mode) {
     if (existing_file) {
         debugPrintf("fopen(%s)\n", fname);
         return fopen(fname, mode);
+    }
+
+    // When writing to a new file, add it to the existing_files
+    if (strchr(mode, 'w')) {
+         debugPrintf("fopen(%s) - creating new file\n", fname);
+         FILE *fp = fopen(fname, mode);
+
+         if (fp) {
+             add_existing_file(fname);
+             qsort(existing_files, existing_files_len, sizeof(char *), &compare_strings);
+         }
+
+         return fp;
     }
 
     debugPrintf("skipping fopen(%s)\n", fname);
@@ -178,6 +236,11 @@ int stat_soloader(const char *pathname, void *statbuf) {
 
 void *AAssetManager_open(void *mgr, const char *filename, int mode) {
     debugPrintf("AAssetManager_open(%i, %s, %i)\n", (int)mgr, filename, mode);
+    return 0;
+}
+
+void *AAssetManager_openDir(void *mgr, const char *dirName) {
+    debugPrintf("AAssetManager_openDir(%p, %s)\n", mgr, dirName);
     return 0;
 }
 
@@ -245,4 +308,57 @@ int ffullread(FILE *f, void **dataptr, size_t *sizeptr, size_t chunk) {
     *sizeptr = used;
 
     return FFULLREAD_OK;
+}
+
+int remove_soloader(const char *path) {
+    char absolute_path[512];
+    if (strncmp(path, DATA_PATH_INT, strlen(DATA_PATH_INT)) != 0) {
+        snprintf(absolute_path, 512, "%s/%s", DATA_PATH_INT, path);
+	} else {
+        strncpy(absolute_path, path, 512);
+	}
+
+    debugPrintf("remove(%s)\n", absolute_path);
+    return remove(absolute_path);
+}
+
+void platform_walk_folder(CppString *pathname, FolderCallback *callback) {
+    void (*convert_path)(CppString *, CppString *) = (void *) so_symbol(&so_mod, "_Z12convert_pathRKNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE");
+    void (*cpp_string_from_c)(CppString *, const char *) = (void *) so_symbol(&so_mod, "_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc");
+    void (*cpp_string_free)(CppString *) = (void *) so_symbol(&so_mod, "_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev");
+
+    CppString converted_path;
+    convert_path(&converted_path, pathname);
+
+    char *converted_path_c;
+    if ((converted_path.raw[0] & 1) != 0) {
+        converted_path_c = converted_path.external.data;
+    } else {
+        converted_path_c = (char *)&converted_path.raw[1];
+    }
+
+    char absolute_converted_path_c[1024];
+    snprintf(absolute_converted_path_c, 1024, "%s/%s", DATA_PATH_INT, converted_path_c);
+
+    debugPrintf("platform_walk_folder for %s\n", absolute_converted_path_c);
+
+    SceUID dp = sceIoDopen(absolute_converted_path_c);
+    if (dp >= 0) {
+        struct SceIoDirent ep;
+        while (sceIoDread(dp, &ep) > 0) {
+            debugPrintf("platform_walk_folder found %s\n", ep.d_name);
+
+            FilesystemItem fs_item;
+            cpp_string_from_c(&fs_item.name, ep.d_name);
+            fs_item.is_file = (ep.d_stat.st_mode & SCE_S_IFDIR) == 0;
+
+            callback->vtable->onItem(callback, &fs_item);
+
+            cpp_string_free(&fs_item.name);
+        }
+
+        sceIoDclose(dp);
+    }
+
+    cpp_string_free(&converted_path);
 }

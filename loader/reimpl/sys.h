@@ -27,4 +27,6 @@ void assert2(const char* f, int l, const char* func, const char* msg);
 
 void syscall(int c);
 
+int mbedtls_platform_entropy_poll(void *data, unsigned char *output, size_t len, size_t *olen);
+
 #endif // SOLOADER_SYS_H
