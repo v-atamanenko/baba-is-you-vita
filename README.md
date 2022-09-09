@@ -40,7 +40,7 @@ In order to properly install the game, you'll have to follow these steps precise
 **Note** Don't install fd_fix.skprx if you're using rePatch plugin!
 - Make sure you have `libshacccg.suprx` in the `ur0:/data/` folder on your console. If you don't, follow [this guide](https://samilops2.gitbook.io/vita-troubleshooting-guide/shader-compiler/extract-libshacccg.suprx) to extract it.
 - <u>Legally</u> obtain your copy of [Baba Is You](https://play.google.com/store/apps/details?id=org.hempuli.baba&hl=en_US&gl=US)
-for Android in form of an `.apk` file. [You can get all the required files directly from your phone](https://stackoverflow.com/questions/11012976/how-do-i-get-the-apk-of-an-installed-app-without-root-access) or by using any APK extractor you can find on Google Play. **Note:** After August 2022 update (version 471. you can check the version by running the game on your Android device and looking in the bottom left corner), the game is no longer supplied in a plain APK, but in a XAPK instead. [Follow this guide](https://samilops2.gitbook.io/vita-troubleshooting-guide/shader-compiler/extract-libshacccg.suprx) to obtain a normal ARMv7 APK for the updated version.
+for Android in form of an `.apk` file. [You can get all the required files directly from your phone](https://stackoverflow.com/questions/11012976/how-do-i-get-the-apk-of-an-installed-app-without-root-access) or by using any APK extractor you can find on Google Play. **Note:** After August 2022 update (version 471. you can check the version by running the game on your Android device and looking in the bottom left corner), the game is no longer supplied in a plain APK, but in a XAPK instead. [Follow this guide by CatoTheYounger97](https://gist.github.com/CatoTheYounger97/5b5b75c468d20d9c9a9f3c692e44c2f8) to obtain a normal ARMv7 APK for the updated version.
 - Open the `.apk` with any zip explorer (like [7-Zip](https://www.7-zip.org/)) and extract all folders from the `.apk` into `ux0:data/baba`. Example of resulting path: `ux0:data/baba/assets/Arrow.png`
 - Install `BABA.vpk` (from [Releases](https://github.com/v-atamanenko/vita_is_you/releases/latest)).
 
@@ -91,6 +91,7 @@ For more information and build options, read the [CMakeLists.txt](CMakeLists.txt
 - [psykana](https://github.com/psykana/) for technical advice, help with testing, patching the side buttons, moral support, and memes.
 - [Northfear](https://github.com/Northfear/) for the VitaGL SDL fork and shared experience of porting SDL-powered Android games.
 - [GrapheneCt](https://github.com/GrapheneCt/) for PVR_PSP2, sfp2hfp, and pthread wrapper functions.
+- [CatoTheYounger97](https://github.com/CatoTheYounger97/) for help with testing and the guide on how to get a normal APK from a XAPK.
 - Everybody on the Vita scene who answered my occasional stupid questions on Discord.
 
 ## License
